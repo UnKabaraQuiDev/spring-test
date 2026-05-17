@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 app:
   name: ${APP_NAME:spring-test}
   message: "Hello from ${app.name}"
@@ -17,6 +14,38 @@ pclib:
       name: "spring_test_mysql"
       username: "user"
       password: "pass"
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 2000ms
+
+  session:
+    store-type: redis
+    timeout: 12h
+    redis:
+      namespace: "${app.name}:session"
+      flush-mode: on-save
+
+  cache:
+    type: redis
+    redis:
+      key-prefix: "${app.name}:cache:"
+      time-to-live: 30m
+      use-key-prefix: true
+
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        name: ${app.name}-session
+        http-only: true
+        same-site: lax
+        secure: false
 
 logging:
   level:
