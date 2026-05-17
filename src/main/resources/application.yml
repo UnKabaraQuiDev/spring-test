@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+app:
+  name: ${APP_NAME:spring-test}
+  message: "Hello from ${app.name}"
+
+pclib:
+  db:
+    enabled: true
+    expose-database: true
+    expose-connector: true
+    auto-create: true
+    protocol: "mysql"
+
+    mysql:
+      name: "spring_test_mysql"
+      username: "user"
+      password: "pass"
+
+logging:
+  level:
+    root: INFO
+    lu.kbra: DEBUG
