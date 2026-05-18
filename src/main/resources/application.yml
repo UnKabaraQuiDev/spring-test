@@ -1,6 +1,9 @@
 app:
   name: ${APP_NAME:spring-test}
   message: "Hello from ${app.name}"
+  remember-me:
+    key: ${RM_KEY:spring-test}
+    ttl: ${RM_TTL:30d}
 
 pclib:
   db:
@@ -48,6 +51,9 @@ server:
         http-only: true
         same-site: lax
         secure: false
+    remember-me:
+      cookie:
+        name: ${app.name}-uid
 
 logging:
   level:
