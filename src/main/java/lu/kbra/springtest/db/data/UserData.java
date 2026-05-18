@@ -12,7 +12,7 @@ public class UserData implements DataBaseEntry {
 
 	@Column
 	@PrimaryKey
-	@DefaultValue("(UUID())")
+	@DefaultValue("(gen_random_uuid())")
 	private UUID id;
 
 	@Column(length = 35)

@@ -64,6 +64,11 @@
 			<groupId>lu.kbra</groupId>
 			<artifactId>pclib-db-spring</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
