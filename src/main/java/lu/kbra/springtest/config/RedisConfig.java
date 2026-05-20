@@ -20,13 +20,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 @Configuration
 public class RedisConfig {
 
-	@Bean
-	ObjectMapper redisObjectMapper() {
+	private ObjectMapper redisObjectMapper() {
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.registerModule(new Jdk8Module());
 		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
 		objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
 				ObjectMapper.DefaultTyping.NON_FINAL,
 				JsonTypeInfo.As.PROPERTY);
@@ -35,21 +34,16 @@ public class RedisConfig {
 	}
 
 	@Bean
-	RedisTemplate<String, Object> redisTemplate(final RedisConnectionFactory connectionFactory, final ObjectMapper redisObjectMapper) {
-
-		final GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(redisObjectMapper);
-
+	RedisTemplate<String, Object> redisTemplate(final RedisConnectionFactory connectionFactory) {
+		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(this.redisObjectMapper());
 		final StringRedisSerializer stringSerializer = new StringRedisSerializer();
-
 		final RedisTemplate<String, Object> template = new RedisTemplate<>();
-		template.setConnectionFactory(connectionFactory);
 
+		template.setConnectionFactory(connectionFactory);
 		template.setKeySerializer(stringSerializer);
 		template.setHashKeySerializer(stringSerializer);
-
-		template.setValueSerializer(jsonSerializer);
-		template.setHashValueSerializer(jsonSerializer);
-
+		template.setValueSerializer(serializer);
+		template.setHashValueSerializer(serializer);
 		template.afterPropertiesSet();
 
 		return template;
@@ -57,22 +51,11 @@ public class RedisConfig {
 
 	@Bean
 	RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-		final ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.registerModule(new JavaTimeModule());
-		objectMapper.registerModule(new Jdk8Module());
-		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-		objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-				ObjectMapper.DefaultTyping.NON_FINAL,
-				JsonTypeInfo.As.PROPERTY);
-
-		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(this.redisObjectMapper());
 
 		final RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
 				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
 
 		return builder -> builder.cacheDefaults(config);
 	}
-
 }

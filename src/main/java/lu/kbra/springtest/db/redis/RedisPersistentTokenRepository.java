@@ -1,4 +1,4 @@
-package lu.kbra.springtest.config;
+package lu.kbra.springtest.db.redis;
 
 import java.time.Duration;
 import java.util.Date;

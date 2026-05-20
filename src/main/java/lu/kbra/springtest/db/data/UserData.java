@@ -50,10 +50,6 @@ public class UserData implements DataBaseEntry {
 		return id;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -80,8 +76,7 @@ public class UserData implements DataBaseEntry {
 
 	@Override
 	public String toString() {
-		return "UserData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", email=" + email
-				+ ", pass=" + pass + "]";
+		return "UserData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", email=" + email + ", pass=" + pass + "]";
 	}
 
 }
