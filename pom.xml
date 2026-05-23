@@ -98,7 +98,7 @@
 					</from>
 
 					<to>
-						<image>docker-registry.local/${project.artifactId}</image>
+						<image>docker-registry.local:5000/${project.artifactId}</image>
 					</to>
 
 					<allowInsecureRegistries>true</allowInsecureRegistries>
