@@ -20,42 +20,46 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 @Configuration
 public class RedisConfig {
 
-	private ObjectMapper redisObjectMapper() {
-		final ObjectMapper objectMapper = new ObjectMapper();
+	@Bean
+	ObjectMapper redisObjectMapper() {
+		final ObjectMapper mapper = new ObjectMapper();
 
-		objectMapper.registerModule(new JavaTimeModule());
-		objectMapper.registerModule(new Jdk8Module());
-		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-				ObjectMapper.DefaultTyping.NON_FINAL,
-				JsonTypeInfo.As.PROPERTY);
+		mapper.registerModule(new JavaTimeModule());
+		mapper.registerModule(new Jdk8Module());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-		return objectMapper;
+		mapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+
+		return mapper;
 	}
 
 	@Bean
-	RedisTemplate<String, Object> redisTemplate(final RedisConnectionFactory connectionFactory) {
-		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(this.redisObjectMapper());
+	RedisTemplate<String, Object> redisTemplate(final RedisConnectionFactory connectionFactory, final ObjectMapper redisObjectMapper) {
+		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(redisObjectMapper);
 		final StringRedisSerializer stringSerializer = new StringRedisSerializer();
 		final RedisTemplate<String, Object> template = new RedisTemplate<>();
 
 		template.setConnectionFactory(connectionFactory);
+
 		template.setKeySerializer(stringSerializer);
 		template.setHashKeySerializer(stringSerializer);
+
 		template.setValueSerializer(serializer);
 		template.setHashValueSerializer(serializer);
+
 		template.afterPropertiesSet();
 
 		return template;
 	}
 
 	@Bean
-	RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(this.redisObjectMapper());
+	RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer(final ObjectMapper redisObjectMapper) {
+		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(redisObjectMapper);
 
 		final RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
 				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
 
 		return builder -> builder.cacheDefaults(config);
 	}
+
 }

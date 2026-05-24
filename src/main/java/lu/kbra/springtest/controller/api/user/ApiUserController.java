@@ -26,6 +26,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lu.kbra.springtest.db.data.UserData;
 import lu.kbra.springtest.db.table.UserTable;
 
@@ -33,7 +36,7 @@ import lu.kbra.springtest.db.table.UserTable;
 @RequestMapping("/api/user")
 public class ApiUserController {
 
-	public record RegisterRequest(String username, String email, String password) {
+	public record RegisterRequest(@NotBlank String username, @NotBlank @Email String email, @NotBlank String password) {
 
 	}
 
@@ -52,16 +55,17 @@ public class ApiUserController {
 	private Duration sessionTtl;
 
 	@PostMapping("/register")
-	public ResponseEntity<String> register(
-			@ModelAttribute final RegisterRequest request,
+	public ResponseEntity<?> register(
+			@Valid @ModelAttribute final RegisterRequest request,
 			final HttpServletRequest httpRequest,
 			final HttpServletResponse httpResponse) {
+		if (userTable.byName(request.username()).isPresent() || userTable.byEmail(request.email()).isPresent()) {
+			return ResponseEntity.badRequest().build();
+		}
+
 		final UserData user = new UserData(request.username(), request.email(), this.passwordEncoder.encode(request.password()));
 
 		final UserData newUser = this.userTable.insertAndReload(user);
-
-		System.err.println(user + "\n" + newUser);
-		System.err.println(user == newUser);
 
 		final Authentication auth = this.authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
