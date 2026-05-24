@@ -43,12 +43,11 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(final HttpSecurity http, final RememberMeServices rememberMeServices) throws Exception {
-		return http
-				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/user/login", "/user/register", "/api/user/login", "/api/user/register", "/api/public/**")
-								.permitAll()
-								.anyRequest()
-								.authenticated())
+		return http.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/user/login", "/user/register", "/api/user/login", "/api/user/register", "/api/public/**", "/actuator/**")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
 
 				.csrf(CsrfConfigurer::disable)
 
@@ -73,9 +72,8 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	RememberMeServices rememberMeServices(
-			final UserDetailsService userDetailsService,
-			final PersistentTokenRepository persistentTokenRepository) {
+	RememberMeServices
+			rememberMeServices(final UserDetailsService userDetailsService, final PersistentTokenRepository persistentTokenRepository) {
 		final PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices(this.rememberMeKey,
 				userDetailsService,
 				persistentTokenRepository);

@@ -63,9 +63,8 @@ public class ApiUserController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		final UserData user = new UserData(request.username(), request.email(), this.passwordEncoder.encode(request.password()));
-
-		final UserData newUser = this.userTable.insertAndReload(user);
+		final UserData user = this.userTable
+				.insertAndReload(new UserData(request.username(), request.email(), this.passwordEncoder.encode(request.password())));
 
 		final Authentication auth = this.authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));

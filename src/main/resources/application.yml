@@ -1,9 +1,12 @@
 app:
-  name: ${APP_NAME:spring-test}
+  name: "%project.artifactId%"
   message: "Hello from ${app.name}"
   remember-me:
     key: ${RM_KEY:spring-test}
     ttl: ${RM_TTL:30d}
+
+loki:
+  url: ${LOKI_URL:http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push}
 
 pclib:
   db:
@@ -21,6 +24,9 @@ pclib:
       port: "${DB_PORT:5432}"
 
 spring:
+  application:
+    name: "%project.artifactId%"
+#    version: "%project.version%"
   data:
     redis:
       host: localhost
@@ -54,6 +60,24 @@ server:
     remember-me:
       cookie:
         name: ${app.name}-uid
+
+management:
+  server:
+    port: 8081
+
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+  endpoint:
+    health:
+      show-details: always
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 logging:
   level:
