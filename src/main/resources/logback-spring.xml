@@ -4,43 +4,50 @@
 	<springProperty
 		scope="context"
 		name="APP_NAME"
-		source="spring.application.name" />
+		source="spring.application.name"
+		defaultValue="spring-test" />
 
 	<springProperty
 		scope="context"
 		name="LOKI_URL"
-		source="loki.url" />
-
-	<appender name="LOKI"
-		class="com.github.loki4j.logback.Loki4jAppender">
-
-		<http>
-			<url>${LOKI_URL}</url>
-		</http>
-
-		<format>
-			<label>
-				<pattern>
-					app=${APP_NAME},host=${HOSTNAME},level=%level,logger=%logger{36}</pattern>
-			</label>
-
-			<message class="com.github.loki4j.logback.JsonLayout" />
-		</format>
-
-	</appender>
+		source="loki.url"
+		defaultValue="http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push" />
 
 	<appender name="CONSOLE"
 		class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}
-				- %msg%n</pattern>
+			<pattern>[%d{HH:mm:ss.SSS}] [%highlight(%-5level)] %cyan([%thread]) %gray(%logger{36}) - %msg%n</pattern>
 		</encoder>
 	</appender>
 
-	<root level="INFO">
-		<appender-ref ref="CONSOLE" />
-		<appender-ref ref="LOKI" />
-	</root>
+	<springProfile name="!local">
+		<appender name="LOKI"
+			class="com.github.loki4j.logback.Loki4jAppender">
+			<http>
+				<url>${LOKI_URL}</url>
+			</http>
+
+			<format>
+				<label>
+					<pattern>
+						app=${APP_NAME},host=${HOSTNAME},level=%level,logger=%logger{36}</pattern>
+				</label>
+
+				<message class="com.github.loki4j.logback.JsonLayout" />
+			</format>
+		</appender>
+
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="LOKI" />
+		</root>
+	</springProfile>
+
+	<springProfile name="local">
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+		</root>
+	</springProfile>
 
 	<logger name="lu.kbra" level="DEBUG" />
 
