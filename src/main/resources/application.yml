@@ -1,12 +1,18 @@
 app:
-  name: "%project.artifactId%"
+  name: "%project.name%"
   message: "Hello from ${app.name}"
   remember-me:
-    key: ${RM_KEY:spring-test}
-    ttl: ${RM_TTL:30d}
+    key: spring-test
+    ttl: 30d
 
 loki:
   url: ${LOKI_URL:http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push}
+
+stripe:
+  api:
+    key: ${STRIPE_API_KEY}
+  webhook:
+    secret: ${STRIPE_WH_SEC}
 
 pclib:
   db:
@@ -17,7 +23,7 @@ pclib:
 
     postgres:
       protocol: "postgres"
-      name: "spring_test_postgres"
+      name: "${DB_NAME:spring_test_postgres}"
       username: "${DB_USER}"
       password: "${DB_PASS}"
       host: "${DB_HOST:localhost}"
@@ -29,9 +35,9 @@ spring:
 #    version: "%project.version%"
   data:
     redis:
-      host: localhost
-      port: 6379
-      database: 0
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:0}
       timeout: 2000ms
 
   session:
@@ -49,7 +55,7 @@ spring:
       use-key-prefix: true
 
 server:
-  port: 8080
+  port: ${PORT_PUBLIC:8081}
   servlet:
     session:
       cookie:
@@ -63,7 +69,7 @@ server:
 
 management:
   server:
-    port: 8081
+    port: ${PORT_MANAGEMENT:8081}
 
   endpoints:
     web:
