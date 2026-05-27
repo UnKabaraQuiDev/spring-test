@@ -11,14 +11,8 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
-    ports:
-      - "5432:5432"
-
   redis:
     image: redis:7-alpine
-
-    ports:
-      - "6379:6379"
 
     volumes:
       - redis-data:/data
@@ -38,6 +32,9 @@ services:
       DB_PASS: ${DB_PASS}
       DB_HOST: postgres
 
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WH_SECRET: ${STRIPE_WH_SECRET}
+
       REDIS_PORT: 6379
       REDIS_HOST: redis
 
@@ -49,3 +46,4 @@ services:
 
 volumes:
   postgres-data:
+  redis-data:
