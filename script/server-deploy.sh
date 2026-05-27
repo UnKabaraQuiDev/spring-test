@@ -10,7 +10,7 @@ FRONTEND_DIR="$APP_DIR/frontend"
 case "$MODE" in
 	frontend)
 		git -C "$FRONTEND_DIR" pull --ff-only
-		docker compose -f "$DOCKER_DIR/docker-compose.yml" restart spring-test
+#		docker compose -f "$DOCKER_DIR/docker-compose.yml" restart spring-test
 		;;
 	backend)
 		git -C "$DOCKER_DIR" pull --ff-only
