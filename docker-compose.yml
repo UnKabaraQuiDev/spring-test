@@ -26,20 +26,22 @@ services:
       - postgres
       - redis
 
+    volumes:
+      - ../frontend:/app/frontend:ro
+
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_HOST: postgres
 
-      STRIPE_API_KEY: ${STRIPE_API_KEY}
-      STRIPE_WH_SECRET: ${STRIPE_WH_SECRET}
-
       REDIS_PORT: 6379
       REDIS_HOST: redis
 
       PORT_PUBLIC: 8080
       PORT_MANAGEMENT: 8081
+
+      FRONTEND_DIR: /app/frontend/
 
     ports:
       - "8080:8080"
