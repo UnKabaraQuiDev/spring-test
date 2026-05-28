@@ -6,6 +6,7 @@ import lu.kbra.pclib.db.autobuild.column.Column;
 import lu.kbra.pclib.db.autobuild.column.ForeignKey;
 import lu.kbra.pclib.db.autobuild.column.PrimaryKey;
 import lu.kbra.pclib.db.impl.DataBaseEntry;
+import lu.kbra.springtest.db.UserPermission;
 import lu.kbra.springtest.db.table.UserTable;
 
 public class UserPermissionData implements DataBaseEntry {

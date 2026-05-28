@@ -62,13 +62,13 @@ server:
   servlet:
     session:
       cookie:
-        name: ${app.name}-session
+        name: "%project.artifactId%-session"
         http-only: true
         same-site: lax
         secure: false
     remember-me:
       cookie:
-        name: ${app.name}-uid
+        name: "%project.artifactId%-uid"
 
 management:
   server:

@@ -1,5 +1,6 @@
 package lu.kbra.springtest.db.table;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -18,12 +19,12 @@ public abstract class ItemTable extends DeferredDataBaseTable<ItemData> {
 		super(dataBase);
 	}
 
-	@Cacheable(cacheNames = "item.code")
-	@Query
-	public abstract Optional<ItemData> byCode(@Param("code") String ean);
-
 	@Cacheable(cacheNames = "item.id")
 	@Query
 	public abstract Optional<ItemData> byId(@Param long id);
+
+	@Cacheable(cacheNames = "item.active")
+	@Query
+	public abstract List<ItemData> byActive(@Param boolean active);
 
 }

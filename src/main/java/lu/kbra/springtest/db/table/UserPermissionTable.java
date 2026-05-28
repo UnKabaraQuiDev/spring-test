@@ -19,6 +19,6 @@ public abstract class UserPermissionTable extends DeferredDataBaseTable<UserPerm
 	}
 
 	@Query()
-	public abstract List<UserPermissionData> byUser(@Param UUID id);
+	public abstract List<UserPermissionData> byUser(@Param UUID userId);
 
 }

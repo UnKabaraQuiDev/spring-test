@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ import lu.kbra.springtest.db.table.UserTable;
 
 @RestController
 @RequestMapping("/api/public/user")
+@Profile("publicUserRegister")
 public class ApiUserController {
 
 	public record RegisterRequest(@NotBlank String username, @NotBlank @Email String email, @NotBlank String password) {

@@ -1,15 +1,10 @@
 package lu.kbra.springtest.db.data;
 
-import java.util.Arrays;
-
 import lu.kbra.pclib.db.autobuild.column.AutoIncrement;
 import lu.kbra.pclib.db.autobuild.column.Check;
 import lu.kbra.pclib.db.autobuild.column.Column;
 import lu.kbra.pclib.db.autobuild.column.Nullable;
 import lu.kbra.pclib.db.autobuild.column.PrimaryKey;
-import lu.kbra.pclib.db.autobuild.column.Unique;
-import lu.kbra.pclib.db.autobuild.column.type.mysql.TextTypes.CharType;
-import lu.kbra.pclib.db.autobuild.query.NotNull;
 import lu.kbra.pclib.db.impl.DataBaseEntry;
 
 public class ItemData implements DataBaseEntry {
@@ -22,19 +17,17 @@ public class ItemData implements DataBaseEntry {
 	@Column(length = 35)
 	private String name;
 
-	@Column(length = 200)
+	@Column(length = 500)
 	@Nullable
 	private String description;
-
-	@Column(length = 13, type = CharType.class)
-	@NotNull
-	@Unique
-	private char[] code;
 
 	// in cents
 	@Column
 	@Check("price >= 0")
 	private long price;
+
+	@Column
+	private boolean active;
 
 	public ItemData() {
 	}
@@ -43,11 +36,11 @@ public class ItemData implements DataBaseEntry {
 		this.id = id;
 	}
 
-	public ItemData(char[] code, String name, String description, long price) {
-		this.code = code;
+	public ItemData(String name, String description, long price, boolean active) {
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.active = active;
 	}
 
 	public String getName() {
@@ -70,12 +63,12 @@ public class ItemData implements DataBaseEntry {
 		return id;
 	}
 
-	public char[] getCode() {
-		return code;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setCode(char[] code) {
-		this.code = code;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public long getPrice() {
@@ -88,8 +81,8 @@ public class ItemData implements DataBaseEntry {
 
 	@Override
 	public String toString() {
-		return "ItemData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", description=" + description + ", code="
-				+ Arrays.toString(code) + ", price=" + price + "]";
+		return "ItemData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", description=" + description + ", price="
+				+ price + ", active=" + active + "]";
 	}
 
 }

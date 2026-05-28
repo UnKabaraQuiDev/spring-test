@@ -1,4 +1,4 @@
-package lu.kbra.springtest.db.data;
+package lu.kbra.springtest.db;
 
 public enum UserPermission {
 

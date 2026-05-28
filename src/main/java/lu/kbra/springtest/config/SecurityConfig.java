@@ -162,7 +162,6 @@ public class SecurityConfig {
 
 	@Bean
 	UserDetailsService userDetailsService(final UserTable userTable, final UserPermissionTable userPermissionTable) {
-
 		return username -> userTable.byName(username)
 				.map(user -> User.withUsername(user.getName())
 						.password(user.getPass())

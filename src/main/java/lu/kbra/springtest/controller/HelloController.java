@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lu.kbra.springtest.comp.perm.AnyPermission;
-import lu.kbra.springtest.db.data.UserPermission;
+import lu.kbra.springtest.db.UserPermission;
 
 @RestController
 public class HelloController {
