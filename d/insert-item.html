@@ -1,0 +1,84 @@
+<form id="create-item-form">
+	<label>
+		Name
+		<input type="text" name="name" required>
+	</label>
+
+	<label>
+		Description
+		<textarea name="description" required></textarea>
+	</label>
+
+	<label>
+		Price
+		<input type="number" name="price" min="0" step="1" required>
+	</label>
+
+	<label>
+		Active
+		<input type="checkbox" name="active" checked>
+	</label>
+
+	<button type="submit">Create item</button>
+</form>
+
+<pre id="result"></pre>
+
+<script>
+const form = document.getElementById("create-item-form");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async event => {
+	event.preventDefault();
+
+	const formData = new FormData(form);
+
+	const data = {
+		name: formData.get("name"),
+		description: formData.get("description"),
+		price: Number(formData.get("price")),
+		active: formData.get("active") === "on"
+	};
+
+	result.textContent = "Creating item...";
+
+	try {
+		const createResponse = await fetch("/api/private/item/create", {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(data)
+		});
+
+		if (createResponse.status !== 201) {
+			result.textContent = `Create failed: HTTP ${createResponse.status}`;
+			return;
+		}
+
+		const location = createResponse.headers.get("Location");
+
+		if (!location) {
+			result.textContent = "Item created, but no Location header was returned.";
+			return;
+		}
+
+		const itemResponse = await fetch(location, {
+			method: "GET",
+			credentials: "include"
+		});
+
+		if (!itemResponse.ok) {
+			result.textContent = `Item created, but GET failed: HTTP ${itemResponse.status}`;
+			return;
+		}
+
+		const item = await itemResponse.json();
+
+		result.textContent = JSON.stringify(item, null, 2);
+	} catch (error) {
+		result.textContent = error.message;
+	}
+});
+</script>

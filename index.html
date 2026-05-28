@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List</title>
+</head>
+
+<body>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+
+		<tbody id="items"></tbody>
+	</table>
+
+	<script>
+		async function loadItems() {
+			const response = await fetch("/api/public/item/get/active/true");
+			const items = await response.json();
+
+			const tbody = document.getElementById("items");
+			tbody.innerHTML = "";
+
+			for (const item of items) {
+				const tr = document.createElement("tr");
+
+				tr.innerHTML = `
+					<td>${item.name}</td>
+					<td>${item.description}</td>
+					<td>${item.price}€</td>
+				`;
+
+				tbody.appendChild(tr);
+			}
+		}
+
+		loadItems();
+	</script>
+</body>
+
+</html>
