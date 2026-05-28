@@ -10,12 +10,12 @@ loki:
 
 stripe:
   api:
-    key: ${STRIPE_API_KEY}
+    key: ${STRIPE_API_KEY:}
   webhook:
-    secret: ${STRIPE_WH_SEC}
+    secret: ${STRIPE_WH_SEC:}
 
 frontend:
-  dir: ${FRONTEND_DIR:/app/frontend/}
+  dir: ${FRONTEND_DIR:./app/frontend/}
 
 pclib:
   db:
@@ -58,7 +58,7 @@ spring:
       use-key-prefix: true
 
 server:
-  port: ${PORT_PUBLIC:8081}
+  port: ${PORT_PUBLIC:8080}
   servlet:
     session:
       cookie:

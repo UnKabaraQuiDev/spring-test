@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import lu.kbra.springtest.comp.perm.AnyPermission;
 import lu.kbra.springtest.db.data.ItemData;
+import lu.kbra.springtest.db.data.UserPermission;
 import lu.kbra.springtest.db.table.ItemTable;
 import lu.kbra.springtest.utils.Ean13Generator;
 
@@ -28,7 +30,9 @@ import lu.kbra.springtest.utils.Ean13Generator;
 @RequestMapping("/api/private/item")
 public class ItemController {
 
-	public record CreateItemData(@NotBlank String name, @NotBlank String description,
+	public record CreateItemData(
+			@NotBlank String name,
+			@NotBlank String description,
 			@DecimalMin(value = "0", inclusive = true) long price) {
 
 	}
@@ -46,11 +50,13 @@ public class ItemController {
 		return IntStream.rangeClosed(from, to).mapToObj(itemTable::byId).filter(Optional::isPresent).collect(Collectors.toList());
 	}
 
+	@AnyPermission(UserPermission.ITEM_CREATE)
 	@PutMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ItemData> createItemPut(@Valid @RequestBody final CreateItemData itemData) {
 		return createItem_(itemData);
 	}
 
+	@AnyPermission(UserPermission.ITEM_CREATE)
 	@PutMapping(value = "/create", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<ItemData> createItemForm(@Valid @ModelAttribute final CreateItemData itemData) {
 		return createItem_(itemData);

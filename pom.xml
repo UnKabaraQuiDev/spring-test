@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
+		<groupId>org.springframework.boot</groupId> 
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.2</version>
 	</parent>
@@ -13,7 +13,7 @@
 	<groupId>lu.kbra</groupId>
 	<artifactId>spring-test</artifactId>
 	<version>0.1</version>
-	
+
 	<name>Spriny Testies</name>
 
 	<properties>
@@ -70,15 +70,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 
 		<dependency>
@@ -104,21 +104,12 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>src/main/filtered-resources</directory>
 				<filtering>true</filtering>
-				<includes>
-					<include>application.yml</include>
-					<include>logback-spring.xml</include>
-				</includes>
 			</resource>
-
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
-				<excludes>
-					<exclude>application.yml</exclude>
-					<exclude>logback-spring.xml</exclude>
-				</excludes>
 			</resource>
 		</resources>
 
@@ -159,7 +150,8 @@
 							<executable>bash</executable>
 
 							<arguments>
-								<argument>${project.basedir}/script/prepare-docker.sh</argument>
+								<argument>
+									${project.basedir}/script/prepare-docker.sh</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -176,7 +168,8 @@
 							<executable>bash</executable>
 
 							<arguments>
-								<argument>${project.basedir}/script/prepare-docker.sh</argument>
+								<argument>
+									${project.basedir}/script/prepare-docker.sh</argument>
 								<argument>--push</argument>
 							</arguments>
 						</configuration>
@@ -227,7 +220,8 @@
 									<executable>bash</executable>
 
 									<arguments>
-										<argument>${project.basedir}/script/prepare-docker.sh</argument>
+										<argument>
+											${project.basedir}/script/prepare-docker.sh</argument>
 										<argument>--no-git</argument>
 									</arguments>
 								</configuration>
@@ -240,7 +234,8 @@
 									<executable>bash</executable>
 
 									<arguments>
-										<argument>${project.basedir}/script/prepare-docker.sh</argument>
+										<argument>
+											${project.basedir}/script/prepare-docker.sh</argument>
 										<argument>--no-git</argument>
 									</arguments>
 								</configuration>

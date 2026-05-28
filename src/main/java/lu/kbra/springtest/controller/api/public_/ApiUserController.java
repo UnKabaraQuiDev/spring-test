@@ -1,4 +1,4 @@
-package lu.kbra.springtest.controller.api.user;
+package lu.kbra.springtest.controller.api.public_;
 
 import java.net.URI;
 import java.time.Duration;
@@ -33,7 +33,7 @@ import lu.kbra.springtest.db.data.UserData;
 import lu.kbra.springtest.db.table.UserTable;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/public/user")
 public class ApiUserController {
 
 	public record RegisterRequest(@NotBlank String username, @NotBlank @Email String email, @NotBlank String password) {
