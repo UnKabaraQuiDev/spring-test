@@ -32,7 +32,7 @@
 			<dependency>
 				<groupId>lu.kbra</groupId>
 				<artifactId>pclib</artifactId>
-				<version>1.0.4</version>
+				<version>1.1.0-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-data-redis</artifactId>
+			<artifactId>spring-session-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

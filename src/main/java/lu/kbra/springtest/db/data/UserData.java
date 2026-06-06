@@ -6,6 +6,7 @@ import lu.kbra.pclib.db.autobuild.column.Column;
 import lu.kbra.pclib.db.autobuild.column.DefaultValue;
 import lu.kbra.pclib.db.autobuild.column.PrimaryKey;
 import lu.kbra.pclib.db.autobuild.column.Unique;
+import lu.kbra.pclib.db.autobuild.column.type.meta.MaxLength;
 import lu.kbra.pclib.db.impl.DataBaseEntry;
 
 public class UserData implements DataBaseEntry {
@@ -15,16 +16,16 @@ public class UserData implements DataBaseEntry {
 	@DefaultValue("(gen_random_uuid())")
 	private UUID id;
 
-	@Column(length = 35)
+	@Column
 	@Unique
-	private String name;
+	private @MaxLength(35) String name;
 
-	@Column(length = 320)
+	@Column
 	@Unique(1)
-	private String email;
+	private @MaxLength(320) String email;
 
-	@Column(length = 60)
-	private String pass;
+	@Column
+	private @MaxLength(50) String pass;
 
 	public UserData() {
 	}
@@ -76,7 +77,8 @@ public class UserData implements DataBaseEntry {
 
 	@Override
 	public String toString() {
-		return "UserData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", email=" + email + ", pass=" + pass + "]";
+		return "UserData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", email=" + email
+				+ ", pass=" + pass + "]";
 	}
 
 }

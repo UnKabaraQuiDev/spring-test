@@ -5,6 +5,7 @@ import lu.kbra.pclib.db.autobuild.column.Check;
 import lu.kbra.pclib.db.autobuild.column.Column;
 import lu.kbra.pclib.db.autobuild.column.Nullable;
 import lu.kbra.pclib.db.autobuild.column.PrimaryKey;
+import lu.kbra.pclib.db.autobuild.column.type.meta.MaxLength;
 import lu.kbra.pclib.db.impl.DataBaseEntry;
 
 public class ItemData implements DataBaseEntry {
@@ -14,12 +15,12 @@ public class ItemData implements DataBaseEntry {
 	@AutoIncrement
 	private Long id;
 
-	@Column(length = 35)
-	private String name;
+	@Column
+	private @MaxLength(35) String name;
 
-	@Column(length = 500)
+	@Column
 	@Nullable
-	private String description;
+	private @MaxLength(500) String description;
 
 	// in cents
 	@Column
@@ -81,8 +82,8 @@ public class ItemData implements DataBaseEntry {
 
 	@Override
 	public String toString() {
-		return "ItemData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", description=" + description + ", price="
-				+ price + ", active=" + active + "]";
+		return "ItemData@" + System.identityHashCode(this) + " [id=" + id + ", name=" + name + ", description="
+				+ description + ", price=" + price + ", active=" + active + "]";
 	}
 
 }

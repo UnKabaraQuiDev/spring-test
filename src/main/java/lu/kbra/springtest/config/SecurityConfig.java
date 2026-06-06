@@ -31,6 +31,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,6 +42,7 @@ import lu.kbra.springtest.db.table.UserTable;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableSpringHttpSession
 public class SecurityConfig {
 
 	@Value("${server.servlet.session.cookie.name}")
@@ -56,45 +58,34 @@ public class SecurityConfig {
 	private Duration rememberMeTtl;
 
 	@Bean
-	SecurityFilterChain securityFilterChain(
-			final HttpSecurity http,
-			final RememberMeServices rememberMeServices,
+	SecurityFilterChain securityFilterChain(final HttpSecurity http, final RememberMeServices rememberMeServices,
 			@Qualifier("appCorsConfigurationSource") final CorsConfigurationSource corsConfigurationSource,
-			final Customizer<CsrfConfigurer<HttpSecurity>> csrfCustomizer)
-			throws Exception {
+			final Customizer<CsrfConfigurer<HttpSecurity>> csrfCustomizer) throws Exception {
 
 		return http
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/index.html")
-						.permitAll()
-						.requestMatchers("/f/a/**", "/api/private/**")
-						.authenticated()
-						.requestMatchers("/f/**", "/api/public/**", "/actuator/**")
-						.permitAll()
-						.anyRequest()
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/", "/index.html").permitAll()
+						.requestMatchers("/f/a/**", "/api/private/**").authenticated()
+						.requestMatchers("/f/**", "/api/public/**", "/actuator/**").permitAll().anyRequest()
 						.permitAll())
 
-				.formLogin(form -> form.loginPage("/f/user/login")
-						.loginProcessingUrl("/api/public/user/login")
-						.defaultSuccessUrl("/f/", true)
-						.permitAll())
+				.formLogin(form -> form.loginPage("/f/user/login").loginProcessingUrl("/api/public/user/login")
+						.defaultSuccessUrl("/f/", true).permitAll())
 
 				.httpBasic(HttpBasicConfigurer::disable)
 
-				.exceptionHandling(ex -> ex.defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-						new AntPathRequestMatcher("/api/**")))
+				.exceptionHandling(ex -> ex.defaultAuthenticationEntryPointFor(
+						new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), new AntPathRequestMatcher("/api/**")))
 
-				.sessionManagement(
-						session -> session.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession))
+				.sessionManagement(session -> session
+						.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession))
 
 				.logout(logout -> logout.logoutUrl("/api/public/user/logout")
-						.deleteCookies(this.sessionCookieName, this.rememberMeCookieName)
-						.invalidateHttpSession(true)
+						.deleteCookies(this.sessionCookieName, this.rememberMeCookieName).invalidateHttpSession(true)
 						.clearAuthentication(true))
 
 				.rememberMe(remember -> remember.rememberMeServices(rememberMeServices))
 
-				.csrf(csrfCustomizer)
-				.cors(cors -> cors.configurationSource(corsConfigurationSource))
+				.csrf(csrfCustomizer).cors(cors -> cors.configurationSource(corsConfigurationSource))
 
 				.build();
 	}
@@ -145,12 +136,11 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	RememberMeServices
-			rememberMeServices(final UserDetailsService userDetailsService, final PersistentTokenRepository persistentTokenRepository) {
+	RememberMeServices rememberMeServices(final UserDetailsService userDetailsService,
+			final PersistentTokenRepository persistentTokenRepository) {
 
-		final PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices(this.rememberMeKey,
-				userDetailsService,
-				persistentTokenRepository);
+		final PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices(
+				this.rememberMeKey, userDetailsService, persistentTokenRepository);
 
 		services.setCookieName(this.rememberMeCookieName);
 		services.setParameter("rememberMe");
@@ -163,12 +153,9 @@ public class SecurityConfig {
 	@Bean
 	UserDetailsService userDetailsService(final UserTable userTable, final UserPermissionTable userPermissionTable) {
 		return username -> userTable.byName(username)
-				.map(user -> User.withUsername(user.getName())
-						.password(user.getPass())
-						.authorities(userPermissionTable.byUser(user.getId())
-								.stream()
-								.map(val -> val.getPermission().name())
-								.toArray(String[]::new))
+				.map(user -> User.withUsername(user.getName()).password(user.getPass())
+						.authorities(userPermissionTable.byUser(user.getId()).stream()
+								.map(val -> val.getPermission().name()).toArray(String[]::new))
 						.build())
 				.orElseThrow(() -> new UsernameNotFoundException(username));
 	}

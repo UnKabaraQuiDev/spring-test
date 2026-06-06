@@ -5,6 +5,7 @@ import java.util.UUID;
 import lu.kbra.pclib.db.autobuild.column.Column;
 import lu.kbra.pclib.db.autobuild.column.ForeignKey;
 import lu.kbra.pclib.db.autobuild.column.PrimaryKey;
+import lu.kbra.pclib.db.autobuild.column.type.meta.MaxLength;
 import lu.kbra.pclib.db.impl.DataBaseEntry;
 import lu.kbra.springtest.db.UserPermission;
 import lu.kbra.springtest.db.table.UserTable;
@@ -16,9 +17,9 @@ public class UserPermissionData implements DataBaseEntry {
 	@ForeignKey(table = UserTable.class)
 	private UUID userId;
 
-	@Column(length = 16)
+	@Column
 	@PrimaryKey
-	private UserPermission permission;
+	private @MaxLength(16) UserPermission permission;
 
 	public UserPermissionData() {
 	}
@@ -38,7 +39,8 @@ public class UserPermissionData implements DataBaseEntry {
 
 	@Override
 	public String toString() {
-		return "UserPermissionData@" + System.identityHashCode(this) + " [userId=" + userId + ", permission=" + permission + "]";
+		return "UserPermissionData@" + System.identityHashCode(this) + " [userId=" + userId + ", permission="
+				+ permission + "]";
 	}
 
 }
